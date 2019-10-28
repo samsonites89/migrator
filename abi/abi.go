@@ -1,8 +1,10 @@
 package abi
 
 import (
+	"encoding/hex"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
+	log "github.com/sirupsen/logrus"
 	"strings"
 )
 
@@ -740,4 +742,33 @@ type CustomerJourneyLink struct {
 func Init() {
 	notaryABI, _ = abi.JSON(strings.NewReader(notaryABIStr))
 	customerJourneyABI, _ = abi.JSON(strings.NewReader(customerJourneyABIStr))
+}
+
+func DetermineType(hexInput string) (int, error) {
+	var funcType int
+	// Method Data.
+	byteData, err := hex.DecodeString(hexInput[2:10])
+	if err != nil {
+		log.Errorf("Error Parsing TX InputData Value : %v", err)
+		return 0, err
+	}
+
+	m, err := customerJourneyABI.MethodById(byteData)
+	if err != nil {
+		log.Errorf("Error Parsing TX InputData Value : %v", err)
+		return 0, err
+
+	}
+
+	switch m.Name {
+
+	case "Start":
+		log.Debug("Start")
+		funcType = 1
+	case "Link":
+		log.Debug("Link")
+		funcType = 2
+	}
+	// (probably) non-notary contract }
+	return funcType, nil
 }

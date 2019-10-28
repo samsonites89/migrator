@@ -1,8 +1,6 @@
 package http
 
 import (
-	"encoding/json"
-	_ "encoding/json"
 	"fmt"
 	log "github.com/sirupsen/logrus"
 	"io/ioutil"
@@ -13,9 +11,7 @@ import (
 )
 
 // TODO should throw error if there is something wrong like connection cannot be made etc.
-func GetTxList(transactions *[]njson.TxResult, start int, size int) {
-
-	var resp njson.Response
+func GetTxList(start int, size int) ([]njson.TxResult, error) {
 
 	endpoint := config.EtherscanEndPoint
 	startBlock := start
@@ -38,19 +34,16 @@ func GetTxList(transactions *[]njson.TxResult, start int, size int) {
 	}
 
 	bodyBytes, err := ioutil.ReadAll(response.Body)
-	err = json.Unmarshal(bodyBytes, &resp)
-	if err != nil {
-		log.Errorf("Error Unmarshalling Response Body : %v", err)
-	}
+	txs, err := njson.ParseJSONResponse(bodyBytes)
 
-	if resp.Message == "OK" {
-		err = json.Unmarshal(resp.Result, &transactions)
-		if err != nil {
-			log.Errorf("Error Unmarshalling Response Body : %v", err)
-		}
+	log.Debugf("Transactions from Response has been marshalled : transaction counts = %d", len(txs))
+
+	if err != nil {
+		log.Errorf("Fetched Data is not in the correct format")
 
 	}
 
 	defer response.Body.Close()
 
+	return txs, nil
 }

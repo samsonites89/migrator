@@ -1,6 +1,7 @@
 package http
 
 import (
+	"fmt"
 	"samsam.son/migrator/config"
 	"samsam.son/migrator/njson"
 	"testing"
@@ -9,8 +10,11 @@ import (
 func TestGetTxList(t *testing.T) {
 
 	var txs []njson.TxResult
-	GetTxList(&txs, int(config.StartingBlock), 1000)
-
+	txs, err := GetTxList(int(config.StartingBlock), 1000)
+	if err != nil {
+		t.Fail()
+	}
+	fmt.Println(len(txs))
 	if len(txs) != 10 {
 		t.Fail()
 	}

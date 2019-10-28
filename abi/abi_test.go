@@ -22,7 +22,7 @@ func TestParseInput(t *testing.T) {
 		// (probably) non-notary contract
 		t.Fail()
 	} else {
-		fmt.Println(m)
+		fmt.Println(m.Name)
 		// decode txInput Payload
 		decodedData, err := hex.DecodeString(textData[10:])
 		if err != nil {
@@ -64,4 +64,11 @@ func TestParseInput(t *testing.T) {
 
 	}
 
+}
+
+func TestDetermineType(t *testing.T) {
+	Init()
+	textData := "0xba377a26da7ab8c89d4b0fe5008c3a6d474cc345f9a0292a7f36bc01b28be3856be5cb6d00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000000d424b323031393038333030303100000000000000000000000000000000000000"
+	typ, _ := DetermineType(textData)
+	fmt.Println(typ)
 }
