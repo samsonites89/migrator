@@ -1,0 +1,8 @@
+# Created by .ignore support plugin (hsz.mobi)
+### samsonites template
+# ignore by samsonites
+
+.idea
+migrator
+migrator.db
+vendor
