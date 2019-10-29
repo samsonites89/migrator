@@ -52,5 +52,4 @@ func InsertTransaction(db *sql.DB, tx njson.TxResult) {
 		log.Debugf("%s inserted into database", tx.TxHash)
 	}
 
-
 }

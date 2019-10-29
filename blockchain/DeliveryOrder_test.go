@@ -4,8 +4,7 @@ import (
 	"encoding/xml"
 	"os"
 	"testing"
-
-	"github.blockchaindltlab.nl/deliver-ng/deliver-oracle-geofencing/blockchain"
+        "samsam.son/migrator/blockchain"
 )
 
 func TestDeliveryOrderXMLParse(t *testing.T) {

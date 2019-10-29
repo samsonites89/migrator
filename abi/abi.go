@@ -739,13 +739,14 @@ type CustomerJourneyLink struct {
 	Key    string
 }
 
-func Init() {
+func initABI() {
 	notaryABI, _ = abi.JSON(strings.NewReader(notaryABIStr))
 	customerJourneyABI, _ = abi.JSON(strings.NewReader(customerJourneyABIStr))
 }
 
 func DetermineType(hexInput string) (int, error) {
 	//log.Debugf("input HEX value : %s" , hexInput)
+	initABI()
 	var funcType int
 	//var docType int
 	// Method Data.
