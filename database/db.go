@@ -42,10 +42,15 @@ func InsertTransaction(db *sql.DB, tx njson.TxResult) {
 
 	//Parse Input to see what it is: Link, Start?
 	funcType , _ := abi.DetermineType(tx.Input)
-	log.Debugf("SC Function Type : &d" , funcType)
-	_, err := db.Exec(`insert into collected_CSStart(block number, txidx number, sender text, toAddr text, nonce number, gas number, gasPrice number, data text,funcType number) values (?,?,?,?,?,?,?,?,?)`,
+	log.Debugf("SC Function Type : %d" , funcType)
+
+	_, err := db.Exec(`insert into collected_transaction(block , txid , sender , toAddr , nonce , gas , gasPrice , data , funcType) values (?,?,?,?,?,?,?,?,?)`,
 		tx.BlockNumber, tx.TxHash, tx.From, tx.To, tx.Nonce, tx.Gas, tx.GasPrice, tx.Input, funcType)
 	if err != nil {
-		log.WithError(err).Fatal(`could not insert into "CSLink" table`)
+		log.WithError(err).Fatal(`could not insert into " collected_transaction" table`)
+	} else {
+		log.Debugf("%s inserted into database", tx.TxHash)
 	}
+
+
 }

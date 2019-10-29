@@ -8,20 +8,20 @@ import (
 // Basic JSON structs for the migrator
 
 type Response struct {
-	Status  string          `json:"status"`
+	Status  int   	       `json:"status,string"`
 	Message string          `json:"message"`
 	Result  json.RawMessage `json:"result"`
 }
 
 type TxResult struct {
-	BlockNumber string `json:"blockNumber"`
-	TxHash      string `json:"hash"`
-	Nonce       string `json:"nonce"`
-	From        string `json:"from"`
-	To          string `json:"to"`
-	Gas         string `json:"gas"`
-	GasPrice    string `json:"gasPrice"`
-	Input       string `json:"input"`
+	BlockNumber uint64		`json:"blockNumber,string"`
+	TxHash      string 		`json:"hash"`
+	Nonce       uint64 		`json:"nonce,string"`
+	From        string 		`json:"from"`
+	To          string 		`json:"to"`
+	Gas         uint64 		`json:"gas,string"`
+	GasPrice    uint64 		`json:"gasPrice,string"`
+	Input       string 		`json:"input"`
 }
 
 // Parse JSON Response from Etherscan
@@ -35,7 +35,7 @@ func ParseJSONResponse(responseBody []byte) ([]TxResult, error) {
 		return nil, err
 	}
 
-	if resp.Status == "1" {
+	if resp.Status == 1 {
 		if err := json.Unmarshal(resp.Result, &transactions); err != nil {
 			log.Errorf("Error Unmarshalling Response Body : %v", err)
 			return nil, err

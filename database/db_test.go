@@ -3,6 +3,7 @@ package database
 import (
 	"fmt"
 	"io/ioutil"
+	"samsam.son/migrator/abi"
 	"samsam.son/migrator/config"
 	"samsam.son/migrator/njson"
 	"testing"
@@ -20,12 +21,13 @@ func TestOpen(t *testing.T) {
 	defer db.Close()
 }
 
-func TestInsertCSStartTransaction(t *testing.T) {
+func TestInsertTransaction(t *testing.T) {
 
+	abi.Init()
 	//Primary Setup
 	config.DBFile = "test.db"
 
-	db, err := Open()
+	db, err := Init()
 	if err != nil {
 		fmt.Printf("Error thrown while Opening Database : %v", err)
 	}

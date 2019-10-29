@@ -61,6 +61,7 @@ func TestParseInput(t *testing.T) {
 		}
 		fmt.Println(data.Hash.Hex())
 		fmt.Println(data.Parent.Hex())
+		fmt.Println(data.Typ)
 
 	}
 

@@ -745,17 +745,20 @@ func Init() {
 }
 
 func DetermineType(hexInput string) (int, error) {
+	//log.Debugf("input HEX value : %s" , hexInput)
 	var funcType int
+	//var docType int
 	// Method Data.
 	byteData, err := hex.DecodeString(hexInput[2:10])
+
 	if err != nil {
-		log.Errorf("Error Parsing TX InputData Value : %v", err)
+		log.Errorf("1: Error Parsing TX InputData Value : %v", err)
 		return 0, err
 	}
 
 	m, err := customerJourneyABI.MethodById(byteData)
 	if err != nil {
-		log.Errorf("Error Parsing TX InputData Value : %v", err)
+		log.Errorf("2: Error Parsing TX InputData Value : %v", err)
 		return 0, err
 
 	}

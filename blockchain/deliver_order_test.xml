@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<INTROR>
+    <MessageSenderIdentifier>org56.customs</MessageSenderIdentifier>
+    <MessageSenderName>SamsungSDS</MessageSenderName>
+    <MessageTypeIdentifier>INTROR</MessageTypeIdentifier>
+    <MessageName>Inland Transfer Order</MessageName>
+    <MessageNumber>DO0001-20190104185703</MessageNumber>
+    <DocumentDate>20190111</DocumentDate>
+    <DocumentNumber>DO201901111600</DocumentNumber>
+    <HouseBillofLadingNumber></HouseBillofLadingNumber>
+    <ReleaseBringTypeCode>I</ReleaseBringTypeCode>
+    <ImportExportTypeCode>1</ImportExportTypeCode>
+    <CarrierBookingNumber>BC201901111600</CarrierBookingNumber>
+    <ShippingLineOrganizationIdentifier>HDMU</ShippingLineOrganizationIdentifier>
+    <ShippingLineOrganizationname>Namsung Carrier</ShippingLineOrganizationname>
+    <ShipperOrganizationIdentifier>02</ShipperOrganizationIdentifier>
+    <ShipperOrganizationname>Hyundai Glovis</ShipperOrganizationname>
+    <CarrierOrganizationIdentifier>58</CarrierOrganizationIdentifier>
+    <CarrierOrganizationname>HTNS</CarrierOrganizationname>
+    <ForwarderOrganizationIdentifier></ForwarderOrganizationIdentifier>
+    <ForwarderOrganizationname></ForwarderOrganizationname>
+    <VesselFlightName></VesselFlightName>
+    <Voyage></Voyage>
+    <MotherVesselCode>MOLT</MotherVesselCode>
+    <TerminalVoyage>002</TerminalVoyage>
+    <PickupLocation>
+        <Name>Hyundai Glovis</Name>
+        <PostalCode>10634</PostalCode>
+        <Address>1699-8 Seocho-dong Seocho-gu Seoul South Korea</Address>
+        <ContactPersonName></ContactPersonName>
+        <ContactTelephoneNumber></ContactTelephoneNumber>
+    </PickupLocation>
+    <DropLocation>
+        <Name>Pusan New Port</Name>
+        <PostalCode>03423</PostalCode>
+        <Address>Busan Port Jungangdong 4(sa)-ga Busan</Address>
+        <ContactPersonName></ContactPersonName>
+        <ContactTelephoneNumber></ContactTelephoneNumber>
+    </DropLocation>
+    <Remark></Remark>
+    <CntrList>
+        <CntrItem>
+            <SequenceNumber>1</SequenceNumber>
+            <ContainerInformation>
+                <Number>CN0011600</Number>
+                <Type>20DC</Type>
+                <EmptyYN>F</EmptyYN>
+            </ContainerInformation>
+            <Vehicle>
+                <VehicleNumber></VehicleNumber>
+                <TelephoneNumber></TelephoneNumber>
+            </Vehicle>
+        </CntrItem>
+        <CntrItem>
+            <SequenceNumber>2</SequenceNumber>
+            <ContainerInformation>
+                <Number>CN0021600</Number>
+                <Type>20DC</Type>
+                <EmptyYN>F</EmptyYN>
+            </ContainerInformation>
+            <Vehicle>
+                <VehicleNumber></VehicleNumber>
+                <TelephoneNumber></TelephoneNumber>
+            </Vehicle>
+        </CntrItem>
+    </CntrList>
+</INTROR>
