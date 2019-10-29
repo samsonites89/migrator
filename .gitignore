@@ -6,3 +6,6 @@
 migrator
 migrator.db
 vendor
+
+# Test file.. so ignore in git.
+!/database/test.db

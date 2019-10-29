@@ -23,7 +23,7 @@ func TestOpen(t *testing.T) {
 
 func TestInsertTransaction(t *testing.T) {
 
-	abi.Init()
+	abi.InitAbI()
 	//Primary Setup
 	config.DBFile = "test.db"
 
@@ -31,8 +31,6 @@ func TestInsertTransaction(t *testing.T) {
 	if err != nil {
 		fmt.Printf("Error thrown while Opening Database : %v", err)
 	}
-
-	defer db.Close()
 
 	// If there is no error, it can be assumed that the data is ok
 	// Read from file
@@ -43,7 +41,31 @@ func TestInsertTransaction(t *testing.T) {
 	}
 	tx, err := njson.ParseJSONResponse(jsonData)
 
-	fmt.Println(len(tx))
-	InsertTransaction(db, tx[0])
+	defer db.Close()
+	i := 0
+	for i < len(tx) {
+		InsertTransaction(db, tx[i])
+		i++
+		fmt.Printf("iteration : %d", i)
+	}
+}
+
+func TestGetCustomerJourneyTransaction(t *testing.T) {
+	abi.InitAbI()
+
+	//Primary Setup
+	config.DBFile = "test.db"
+
+	db, err := Init()
+	if err != nil {
+		fmt.Printf("Error thrown while Opening Database : %v", err)
+	}
+
+	var getTx njson.TxResult
+	getTx, _ = GetCustomerJourneyTransaction(db, "0x1973cfaa91cc72ef4e6ae4f63d6c3453b08ff3146cd390381d2d9298fe415aa1")
+
+	fmt.Println(getTx)
+
+	defer db.Close()
 
 }
