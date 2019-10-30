@@ -68,6 +68,8 @@ func TestGetCustomerJourneyTransaction(t *testing.T) {
 		fmt.Print("The Value is Correct!")
 	}
 
+
+
 	defer db.Close()
 
 }

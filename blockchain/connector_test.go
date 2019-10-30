@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"samsam.son/migrator/config"
+	"samsam.son/migrator/database"
+	"samsam.son/migrator/njson"
 	"testing"
 )
 
@@ -49,7 +51,37 @@ func TestGetBalance(t *testing.T) {
 
 func TestSendTransactionToGeth(t *testing.T) {
 
-	//SendTransactionToGeth(ctx,)
+	var tx njson.TxResult
+	config.DefaultKey.File = "../config/new_rinkeby.key"
+	config.DBFile = "../migrator.db"
+	db ,err := database.Open()
+	if err != nil {
+		fmt.Println(err)
+	}
+	tx , err = database.GetCustomerJourneyTransaction(db,"0x1973cfaa91cc72ef4e6ae4f63d6c3453b08ff3146cd390381d2d9298fe415aa1")
+	if err !=nil {
+		fmt.Println(err)
+	}
+	fmt.Println(tx.To)
+	defer db.Close()
 
+	err = SendTransactionToGeth(ctx,db)
+	if err != nil {
+		fmt.Println(err)
+	}
 
+	signedTx , err := RecreateSignedTransaction("0x1973cfaa91cc72ef4e6ae4f63d6c3453b08ff3146cd390381d2d9298fe415aa1")
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(signedTx)
+	client, err := ethclient.Dial(config.GethEndPoint)
+	if err != nil {
+		fmt.Printf("Error: %v \n" , err)
+	}
+
+	err = ResendTransactions(ctx,client,signedTx)
+	if err !=nil {
+		fmt.Println(err)
+	}
 }

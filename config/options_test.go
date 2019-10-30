@@ -21,3 +21,5 @@ func TestArgs(t *testing.T) {
 	fmt.Println(os.Args[1])
 
 }
+
+// merong 30

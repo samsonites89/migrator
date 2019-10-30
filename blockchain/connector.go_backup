@@ -3,20 +3,14 @@ package blockchain
 import (
 	"context"
 	"database/sql"
-	"encoding/hex"
 	"fmt"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
-	"github.com/ethereum/go-ethereum/accounts/keystore"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 	log "github.com/sirupsen/logrus"
-	"io/ioutil"
 	"math/big"
 	"os"
 	"samsam.son/migrator/config"
-	"samsam.son/migrator/database"
-	"samsam.son/migrator/njson"
 	"sync/atomic"
 	"time"
 )
@@ -34,10 +28,8 @@ const (
 )
 
 
-
 var (
 	nonce uint64
-	signingKey	*keystore.Key
 )
 
 // NextNonce returns the next nonce for the Oracles account.
@@ -65,72 +57,45 @@ func SendTransactionToGeth(ctx context.Context , db *sql.DB) error {
 	if err != nil {
 		return err
 	}
+	auth, err := bind.NewTransactor(r, config.DefaultKey.Password)
+	if err != nil {
+		r.Close()
+		return err
+	}
+	defer r.Close()
 
-	// TODO I don't Think I have to do this every single time..
 	// 2. connect to Ethereum node
 	client, err := ethclient.Dial(config.GethEndPoint)
 	if err != nil {
-		return err
+		return nil
 	}
 
 	// 3. Create Nonce Value for the transaction
-	if err := setupNonce(ctx, config.MyAddress, client); err != nil {
+	if err := setupNonce(ctx, auth.From, client); err != nil {
 		return err
 	}
 
-	json, err := ioutil.ReadAll(r)
+	// 4. Instantiate a New Customer Journey Addr.
+	sm, err := NewCustomerJourney(config.CustomerJourneyAddress, client)
 	if err != nil {
+		client.Close()
 		return err
 	}
+	fmt.Println(sm)
 
-	signingKey, err = keystore.DecryptKey(json, config.DefaultKey.Password)
-	if err != nil {
-		return err
-	}
-	fmt.Println()
 
 	return nil
 }
 
-func RecreateSignedTransaction(txID string) (*types.Transaction, error) {
+func createCustomerJourneyLink(auth bind.TransactOpts, s *CustomerJourney, hash [32]byte, parent [32]byte) error {
 
-	//gas and data are input values.
-	var dbtx njson.TxResult
-
-	db ,err := database.Open()
+	auth.Nonce = new(big.Int).SetUint64(NextNonce())
+	tx, err := s.Link(&auth, parent, hash, GeoFencingDocType, "Container")
 	if err != nil {
-		fmt.Println(err)
+		log.Printf("could not link geofence asset to journey (err=%s)", err)
 	}
-	dbtx , err = database.GetCustomerJourneyTransaction(db,txID)
-	if err !=nil {
-		fmt.Println(err)
-	}
+	log.Printf("linked geofence asset in customer journey (tx=0x%x)", tx.Hash())
 
-	// Cut Data off	byteData, err := hex.DecodeString(textData[2:10])
-
-
-	data , err := hex.DecodeString(dbtx.Input[2:])
-
-
-	tx := types.NewTransaction(NextNonce(), config.CustomerJourneyAddress,
-		big.NewInt(0), dbtx.Gas, new(big.Int).SetUint64(dbtx.GasPrice), data )
-
-	rinkebyChainID := new(big.Int).SetUint64(uint64(4))
-
-	signer := types.NewEIP155Signer(rinkebyChainID)
-	signedTx, _ := types.SignTx(tx, signer, signingKey.PrivateKey)
-	fmt.Println(signedTx)
-
-	return signedTx , nil
-}
-
-func ResendTransactions(ctx context.Context, client *ethclient.Client, tx *types.Transaction) error {
-	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
-	err := client.SendTransaction(ctx, tx)
-	cancel()
-	if err != nil {
-		return err
-	}
 
 	return nil
 }
