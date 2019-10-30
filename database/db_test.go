@@ -64,8 +64,24 @@ func TestGetCustomerJourneyTransaction(t *testing.T) {
 	var getTx njson.TxResult
 	getTx, _ = GetCustomerJourneyTransaction(db, "0x1973cfaa91cc72ef4e6ae4f63d6c3453b08ff3146cd390381d2d9298fe415aa1")
 
-	fmt.Println(getTx)
+	if getTx.BlockNumber == 5000736 {
+		fmt.Print("The Value is Correct!")
+	}
 
+	defer db.Close()
+
+}
+
+func TestGetTxCount(t *testing.T) {
+	//Primary Setup
+	config.DBFile = "../migrator.db"
+
+	db, err := Init()
+	if err != nil {
+		fmt.Printf("Error thrown while Opening Database : %v", err)
+	}
+
+	getTxCount(db)
 	defer db.Close()
 
 }

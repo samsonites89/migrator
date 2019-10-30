@@ -53,11 +53,22 @@ func InsertTransaction(db *sql.DB, tx njson.TxResult) {
 	_, err := db.Exec(`insert into collected_transaction(block , txid , sender , toAddr , nonce , gas , gasPrice , data , funcType) values (?,?,?,?,?,?,?,?,?)`,
 		tx.BlockNumber, tx.TxHash, tx.From, tx.To, tx.Nonce, tx.Gas, tx.GasPrice, tx.Input, funcType)
 	if err != nil {
-		log.WithError(err).Fatal(`could not insert into " collected_transaction" table`)
+		log.WithError(err).Warn(`could not insert into " collected_transaction" table`)
 	} else {
 		log.Debugf("%s inserted into database", tx.TxHash)
 	}
 
+}
+
+func getTxCount(db *sql.DB) {
+	q := `select count(*) from main.collected_transaction`
+	var result string
+
+	rows := db.QueryRowContext(ctx, q)
+	err := rows.Scan(&result)
+	if err == nil {
+		fmt.Println(result)
+	}
 }
 
 // Fetch a Single Tx from the DB.
@@ -94,8 +105,6 @@ func GetCustomerJourneyTransaction(db *sql.DB, txid string) (njson.TxResult, err
 		Input:       data,
 		Nonce:       nonce,
 	}
-
-	print(tx.Input)
 
 	return tx, nil
 }

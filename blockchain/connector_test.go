@@ -20,13 +20,30 @@ func TestCurrentBlock(t *testing.T) {
 	if err != nil {
 		fmt.Printf("Error: %v \n" , err)
 	}
-	fmt.Println(client)
 
-	//end, err := currentBlock(ctx, client)
-	//if err != nil {
-	//	log.Printf("could not determine blockchain head (err=%s)", err)
-	//}
-	//log.Debugf("The current Block is at : %v" , end )
+	end, err := currentBlock(ctx, client)
+	if err != nil {
+		fmt.Printf("could not determine blockchain head (err=%s)", err)
+	}
+	fmt.Printf("The current Block is at : %v" , *end )
+
+}
+
+func TestGetBalance(t *testing.T) {
+
+
+	height := uint64(5350447)
+
+	client, err := ethclient.Dial(config.GethEndPoint)
+	if err != nil {
+		fmt.Printf("Error: %v \n" , err)
+	}
+
+	balance, err := currentBalance(ctx, client, height)
+	if err != nil {
+		fmt.Printf("could not determine blockchain head (err=%s)", err)
+	}
+	fmt.Println(*balance)
 
 }
 

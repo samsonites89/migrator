@@ -12,6 +12,7 @@ import (
 	"os"
 	"samsam.son/migrator/config"
 	"sync/atomic"
+	"time"
 )
 
 const (
@@ -21,6 +22,11 @@ const (
 	GeoFencingDocType         = 6
 	DeliveryOrderDocType      = 9
 )
+
+const (
+	maxPendingTransactionInPool = uint(200)
+)
+
 
 var (
 	nonce uint64
@@ -100,6 +106,20 @@ func createCustomerJourneyLink(auth bind.TransactOpts, s *CustomerJourney, hash 
 	return nil
 }
 
+func createCustomerJourneyStart(auth bind.TransactOpts, s *CustomerJourney, hash [32]byte, parent [32]byte) error {
+
+	auth.Nonce = new(big.Int).SetUint64(NextNonce())
+	tx, err := s.Start(&auth, parent, GeoFencingDocType, "Container")
+	if err != nil {
+		log.Printf("could not link geofence asset to journey (err=%s)", err)
+	}
+	log.Printf("linked geofence asset in customer journey (tx=0x%x)", tx.Hash())
+
+
+	return nil
+}
+
+
 
 
 //func setup(db *sql.DB) error {
@@ -117,4 +137,32 @@ func currentBlock(ctx context.Context, c *ethclient.Client) (*uint64, error) {
 
 	num := h.Number.Uint64()
 	return &num, nil
+}
+
+func currentBalance(ctx context.Context, c *ethclient.Client, blockHeight uint64) (*uint64, error) {
+
+	height := new(big.Int).SetUint64(blockHeight)
+
+	balance, err := c.BalanceAt(ctx, config.MyAddress,height)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(balance)
+	num := balance.Uint64()
+
+	return &num, nil
+}
+
+func targetTransactionPoolHasRoom(ctx context.Context, client *ethclient.Client) (uint, error) {
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+
+	count, err := client.PendingTransactionCount(ctx)
+	if err != nil {
+		return 0, err
+	}
+	if count <= maxPendingTransactionInPool {
+		return maxPendingTransactionInPool - count, nil
+	}
+	return 0, nil
 }

@@ -16,6 +16,8 @@ func GetTxList(start int, size int) ([]njson.TxResult, error) {
 	endpoint := config.EtherscanEndPoint
 	startBlock := start
 	endBlock := size + start
+	log.Infof("Querying from %v to %v", startBlock, endBlock)
+
 	GetAccountTxList := fmt.Sprintf("api?module=account&action=txlist&address=%s&startblock=%v&endblock=%v&sort=asc&apikey=%s",
 		config.Address, startBlock, endBlock, config.ApiKey)
 
@@ -36,7 +38,7 @@ func GetTxList(start int, size int) ([]njson.TxResult, error) {
 	bodyBytes, err := ioutil.ReadAll(response.Body)
 	txs, err := njson.ParseJSONResponse(bodyBytes)
 
-	log.Debugf("Transactions from Response has been marshalled : transaction counts = %d", len(txs))
+	log.Infof("Transactions from Response has been marshalled : transaction counts = %d", len(txs))
 
 	if err != nil {
 		log.Errorf("Fetched Data is not in the correct format")

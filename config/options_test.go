@@ -1,6 +1,8 @@
 package config
 
 import (
+	"fmt"
+	"os"
 	"testing"
 )
 
@@ -11,5 +13,11 @@ func TestDefault(t *testing.T) {
 	if DefaultKey.Password != "rinkeby" {
 		t.Fail()
 	}
+
+}
+
+func TestArgs(t *testing.T) {
+
+	fmt.Println(os.Args[1])
 
 }
