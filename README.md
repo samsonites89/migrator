@@ -11,11 +11,11 @@ The main features of the `migrator` is:
  - Poll data from a specific blockchain
  - Resign the data with another private key and send it to a specific address, with no changes made to the *data* of the original data.
  
-The purpose of the `migrator` is to simple data migration purposes.
+The intention of the `migrator` is to faciliate the migration the data for the pilot.
 
 ### building the module
 
-Simply run:
+Simply run to build the `migrator`:
  ```shell script
  go build 
 ```
@@ -38,9 +38,10 @@ The inputs for the API is as follows :
  3. ending block
  4. API_Key for *Etherscan*
 
-The return data is then stored in the current format.
+The return data is then stored in the format below.
 
 ```go
+package njson 
 
 type TxResult struct {
 	BlockNumber uint64		`json:"blockNumber,string"`
@@ -55,9 +56,25 @@ type TxResult struct {
 
 ```
 
+#### Using the migrator to poll data.
+
+In the current iteration, the migrator can only poll data. *REINDEXING DATA is still a WIP*.
+The input for polling is `start` and `range`.
+- `start` : starting block_height for the poll
+- `range` : the number of blocks the query tx for an *address*
+
+[remark] The API can only poll up to 10,000 TX. This should be accounted for when deciding the range of the polls.
+
+To poll data from the network currently (set to `rinkeby`), simply run command as follows:
+```shell script
+# Set start and range.
+./migrator -start=5000735 -range=5000
+``` 
+The command will create a db (default: `migrator.db`) and index the txs there. If the tx with the same `txid` already exists, 
+the tx will not be indexed.          
 
 [WIP] Recreating the data within the blockchain
- - Currently withinng the *blockchain/connector_test.go* . Will implement a batch-like method to upload all the txs together
+ - Currently there are only a set of test codes within the *blockchain/connector_test.go* for recreating the tx. Will implement a batch-like method to upload all the txs together
 
 
 ### NOTES:
