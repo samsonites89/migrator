@@ -9,6 +9,8 @@ import (
 	"samsam.son/migrator/njson"
 )
 
+
+// Currently Set to only index data from the blockchain.
 func main() {
 
 	// Initialize Database
@@ -26,9 +28,20 @@ func main() {
 
 	log.Debugf("The number of tx is %d", len(transactions))
 
+	// There is no limit to the number of blocks the Request can fetch, but the max number of tx that can be
+	// returned is 10,000.
+
+
 	for i := 0; i < len(transactions); i++ {
 		database.InsertTransaction(db, transactions[i])
 	}
+
+	//TODO work on Batching txs.
+
+
+	// Log Out the total number of TXs in the migrator DB>
+
+
 
 	defer db.Close()
 

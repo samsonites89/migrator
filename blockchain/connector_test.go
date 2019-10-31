@@ -33,7 +33,6 @@ func TestCurrentBlock(t *testing.T) {
 
 func TestGetBalance(t *testing.T) {
 
-
 	height := uint64(5350447)
 
 	client, err := ethclient.Dial(config.GethEndPoint)
@@ -52,7 +51,7 @@ func TestGetBalance(t *testing.T) {
 func TestSendTransactionToGeth(t *testing.T) {
 
 	var tx njson.TxResult
-	config.DefaultKey.File = "../config/new_rinkeby.key"
+	config.DefaultKey.File = "../config/cello_rinkeby.key"
 	config.DBFile = "../migrator.db"
 	db ,err := database.Open()
 	if err != nil {

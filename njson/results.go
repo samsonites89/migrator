@@ -24,7 +24,7 @@ type TxResult struct {
 	Input       string 		`json:"input"`
 }
 
-// Parse JSON Response from Etherscan
+// Parse JSON Response from Etherscan into tx structures.
 func ParseJSONResponse(responseBody []byte) ([]TxResult, error) {
 
 	var resp Response

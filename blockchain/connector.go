@@ -45,6 +45,7 @@ func NextNonce() uint64 {
 	return atomic.AddUint64(&nonce, 1) - 1
 }
 
+// This has to be used as to not create collision
 func setupNonce(ctx context.Context, me common.Address, c *ethclient.Client) error {
 	var err error
 	nonce, err = c.NonceAt(ctx, me, nil)
@@ -54,7 +55,7 @@ func setupNonce(ctx context.Context, me common.Address, c *ethclient.Client) err
 	return err
 }
 
-// HandleEvents listens for events in the customer journey contract
+
 func SendTransactionToGeth(ctx context.Context , db *sql.DB) error {
 
 	// TODO maybe ill include this info in the db just to make sure, but if it's a repeat, it will probably not go in anyways,
@@ -111,7 +112,7 @@ func RecreateSignedTransaction(txID string) (*types.Transaction, error) {
 
 	data , err := hex.DecodeString(dbtx.Input[2:])
 
-
+	// What is this happens at the same time? with the other indexing?
 	tx := types.NewTransaction(NextNonce(), config.CustomerJourneyAddress,
 		big.NewInt(0), dbtx.Gas, new(big.Int).SetUint64(dbtx.GasPrice), data )
 

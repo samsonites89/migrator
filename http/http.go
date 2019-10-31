@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+
 // TODO should throw error if there is something wrong like connection cannot be made etc.
 func GetTxList(start int, size int) ([]njson.TxResult, error) {
 
@@ -19,7 +20,7 @@ func GetTxList(start int, size int) ([]njson.TxResult, error) {
 	log.Infof("Querying from %v to %v", startBlock, endBlock)
 
 	GetAccountTxList := fmt.Sprintf("api?module=account&action=txlist&address=%s&startblock=%v&endblock=%v&sort=asc&apikey=%s",
-		config.Address, startBlock, endBlock, config.ApiKey)
+		config.QueryAddress, startBlock, endBlock, config.ApiKey)
 
 	fullGETUrl := fmt.Sprintf("%s/%s", endpoint, GetAccountTxList)
 
